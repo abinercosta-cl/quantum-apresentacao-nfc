@@ -20,7 +20,9 @@
 <meta name="twitter:title" content="NFC Link Tree — cartão de visita digital com tag NFC">
 <meta name="twitter:description" content="Encoste o celular na tag NFC ou leia o QR Code: a página do seu negócio abre na hora, com seus links e o botão para salvar seu contato com 1 toque.">
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif&display=swap">
 
 <script type="application/ld+json">
 {
@@ -95,96 +97,312 @@
 </script>
 <style>
   :root {
+    --bg: #F7F4EE;
+    --surface: #FDFBF7;
+    --raised: #EFE9DF;
+    --ink: #1F1B16;
+    --ink-2: #5E554A;
+    --ink-3: #746B5F;
+    --line: rgba(31, 27, 22, 0.1);
+    --line-strong: rgba(31, 27, 22, 0.16);
     --accent: #0F6B57;
-    --accent2: #D97706;
-    --bg: #F7F4EF;
-    --bg-alt: #EFEAE1;
-    --ink: #1C1B18;
-    --ink-2: #5B584F;
-    --ink-3: #8B8779;
-    --line: #DDD6C8;
+    --accent-hover: #0C5A49;
+    --dark: #1F1B16;
+    --dark-2: #2A251F;
+    --on-dark: #EFE9DE;
+    --on-dark-2: #B3AA9C;
+    --sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--ink); }
-  a { color: inherit; text-decoration: none; }
-  h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; margin: 0; }
-  .wrap { max-width: 1180px; margin: 0 auto; }
-  .btn { display: inline-flex; align-items: center; transition: transform .15s ease, box-shadow .15s ease; }
-  .btn:hover { transform: translateY(-1px); }
-  .btn:active { transform: translateY(0); }
-  .link:hover { text-decoration: underline; }
-  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-  .grid6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-  .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 72px; align-items: center; }
-  @media (max-width: 860px) {
-    .hero-grid { grid-template-columns: 1fr !important; }
-    .grid3 { grid-template-columns: 1fr !important; }
-    .grid6 { grid-template-columns: 1fr 1fr !important; }
-    .nav-cta { display: none !important; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
   }
-  @media (max-width: 560px) {
-    .grid6 { grid-template-columns: 1fr !important; }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3, p { margin: 0; }
+  h1, h2 { font-family: var(--serif); font-weight: 400; }
+  h3 { font-size: 17px; line-height: 1.4; font-weight: 500; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 48px; }
+  .sec { padding: 112px 0; }
+  .sec-head h2 { font-size: 44px; line-height: 1.1; letter-spacing: -0.01em; }
+  .sec-head p { margin-top: 16px; font-size: 17px; color: var(--ink-2); max-width: 36rem; }
+  .split { display: grid; grid-template-columns: 5fr 7fr; gap: 64px; align-items: start; }
+
+  /* Botões */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    height: 48px; padding: 0 24px; border-radius: 10px;
+    font-size: 16px; font-weight: 500;
+    transition: background-color 160ms var(--ease), color 160ms var(--ease), transform 120ms var(--ease);
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--accent); color: #FFFFFF; box-shadow: inset 0 1px 0 rgba(255,255,255,0.12); }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-sm { height: 36px; padding: 0 16px; font-size: 14px; border-radius: 8px; }
+  .btn-ink { background: var(--ink); color: var(--bg); }
+  .btn-ink:hover { background: #3A332B; }
+  .btn-light { background: var(--on-dark); color: var(--ink); }
+  .btn-light:hover { background: #FFFFFF; }
+  .btn-text {
+    display: inline-flex; align-items: center; height: 48px; padding: 0 4px;
+    font-size: 16px; font-weight: 500; color: var(--ink-2);
+    text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 6px;
+    transition: color 160ms var(--ease), text-decoration-color 160ms var(--ease);
+  }
+  .btn-text:hover { color: var(--ink); text-decoration-color: currentColor; }
+
+  /* Nav */
+  .nav { border-bottom: 1px solid var(--line); }
+  .nav-in { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .brand { display: flex; align-items: center; gap: 8px; }
+  .brand-name { font-size: 17px; font-weight: 600; line-height: 1; }
+  .brand-by { font-size: 14px; color: var(--ink-3); padding-left: 12px; margin-left: 4px; border-left: 1px solid var(--line-strong); line-height: 1; }
+
+  /* Hero */
+  .hero { padding: 80px 0 96px; }
+  .hero-grid { display: grid; grid-template-columns: 6fr 5fr; gap: 48px; align-items: center; }
+  .hero-copy { animation: rise 480ms var(--ease) both; }
+  .kicker { font-size: 15px; color: var(--accent); font-weight: 500; margin-bottom: 24px; }
+  .hero h1 { font-size: 68px; line-height: 1.02; letter-spacing: -0.03em; max-width: 15ch; }
+  .lead { margin-top: 28px; font-size: 19px; line-height: 1.6; color: var(--ink-2); max-width: 34rem; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; margin-top: 40px; }
+
+  /* Hero visual: tag NFC no balcão + celular */
+  .scene { position: relative; height: 600px; }
+  .tag {
+    position: absolute; left: 0; bottom: 8px; width: 268px; height: 172px;
+    border-radius: 16px; background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: 0 1px 2px rgba(31,27,22,0.06), 0 24px 48px -16px rgba(31,27,22,0.22);
+    transform: rotate(-7deg);
+    padding: 20px; display: grid; grid-template-columns: 1fr auto; gap: 16px;
+  }
+  .tag-mark { display: flex; flex-direction: column; justify-content: space-between; }
+  .tag-label { font-size: 15px; font-weight: 500; line-height: 1.3; }
+  .tag-meta { font-size: 12px; color: var(--ink-3); }
+  .tag-qr { width: 72px; height: 72px; align-self: end; }
+  .phone {
+    position: absolute; right: 0; top: 0; width: 272px; z-index: 1;
+    border-radius: 40px; background: #191612; padding: 12px;
+    box-shadow: 0 32px 64px -24px rgba(31,27,22,0.4);
+  }
+  .screen { border-radius: 28px; background: var(--bg); overflow: hidden; }
+  .cover { height: 128px; background: var(--accent); position: relative; }
+  .cover-qr {
+    position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 8px;
+    background: rgba(255,255,255,0.16); display: flex; align-items: center; justify-content: center;
+  }
+  .avatar {
+    position: absolute; left: 50%; bottom: -32px; transform: translateX(-50%);
+    width: 64px; height: 64px; border-radius: 16px; background: var(--raised);
+    border: 3px solid var(--bg); display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-size: 26px; color: var(--ink-2);
+  }
+  .profile { padding: 44px 16px 20px; text-align: center; }
+  .profile-name { font-size: 16px; font-weight: 600; }
+  .profile-desc { font-size: 12px; color: var(--ink-2); margin-top: 4px; line-height: 1.4; }
+  .links { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+  .lnk {
+    height: 40px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line);
+    display: grid; grid-template-columns: 36px 1fr 36px; align-items: center;
+    font-size: 13px; font-weight: 500; white-space: nowrap;
+  }
+  .lnk svg { justify-self: center; }
+  .lnk-save { background: var(--accent); border-color: var(--accent); color: #FFFFFF; margin-top: 4px; }
+  .made-by { margin-top: 16px; font-size: 11px; color: var(--ink-3); display: flex; align-items: center; justify-content: center; gap: 4px; }
+
+  /* Problema */
+  .limits { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-strong); }
+  .limits li { display: grid; grid-template-columns: 200px 1fr; gap: 24px; padding: 24px 0; border-bottom: 1px solid var(--line); }
+  .limits p { font-size: 16px; color: var(--ink-2); }
+
+  /* Como funciona */
+  .how { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 128px 0; }
+  .steps { list-style: none; margin: 64px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; counter-reset: step; }
+  .steps li { border-top: 1px solid var(--ink); padding-top: 24px; }
+  .step-n { font-family: var(--serif); font-size: 48px; line-height: 1; color: var(--ink-3); font-variant-numeric: tabular-nums; display: block; margin-bottom: 24px; }
+  .steps li:first-child .step-n { color: var(--accent); }
+  .steps p { margin-top: 8px; font-size: 15px; color: var(--ink-2); }
+
+  /* Incluso */
+  .feat-lead { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 56px; }
+  .feat-card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 32px; }
+  .feat-card h3 { font-family: var(--serif); font-weight: 400; font-size: 30px; line-height: 1.15; letter-spacing: -0.01em; }
+  .feat-card p { margin-top: 12px; font-size: 16px; color: var(--ink-2); max-width: 30rem; }
+  .feat-rest { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  .feat-rest li { border-top: 1px solid var(--line-strong); padding-top: 20px; }
+  .feat-rest h3 { font-size: 16px; }
+  .feat-rest p { margin-top: 8px; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+
+  /* Comparação */
+  .compare-wrap { margin-top: 56px; overflow-x: auto; }
+  .compare { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 15px; line-height: 1.5; }
+  .compare th, .compare td { text-align: left; vertical-align: top; padding: 20px 24px; border-bottom: 1px solid var(--line); }
+  .compare thead th { font-size: 15px; font-weight: 500; color: var(--ink-2); padding-top: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--line-strong); }
+  .compare tbody th { font-weight: 500; color: var(--ink-3); font-size: 14px; width: 18%; padding-left: 0; }
+  .compare td { color: var(--ink-2); width: 27%; }
+  .compare .us { background: var(--surface); color: var(--ink); }
+  .compare thead .us { color: var(--accent); border-top: 2px solid var(--accent); border-radius: 0; }
+  .compare tbody tr:last-child .us { border-bottom-color: var(--line-strong); }
+  .na { color: var(--ink-3); }
+
+  /* CTA */
+  .cta { background: var(--dark); color: var(--on-dark); padding: 112px 0; }
+  .cta h2 { font-size: 52px; line-height: 1.05; letter-spacing: -0.02em; }
+  .cta p { margin-top: 20px; font-size: 17px; color: var(--on-dark-2); max-width: 32rem; }
+  .cta-grid { display: grid; grid-template-columns: 7fr 5fr; gap: 64px; align-items: end; }
+  .cta-side { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; }
+  .contact { display: flex; flex-direction: column; gap: 4px; font-size: 15px; color: var(--on-dark-2); font-variant-numeric: tabular-nums; }
+  .contact a { transition: color 160ms var(--ease); }
+  .contact a:hover { color: var(--on-dark); }
+
+  /* FAQ */
+  .faq-list { border-top: 1px solid var(--line-strong); }
+  .faq-item { padding: 24px 0; border-bottom: 1px solid var(--line); }
+  .faq-item p { margin-top: 8px; font-size: 15px; color: var(--ink-2); max-width: 40rem; }
+  .sticky { position: sticky; top: 32px; }
+
+  /* Rodapé */
+  .foot { border-top: 1px solid var(--line); }
+  .foot-in { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 24px; padding-top: 28px; padding-bottom: 28px; font-size: 14px; color: var(--ink-3); }
+  .foot-in a { transition: color 160ms var(--ease); }
+  .foot-in a:hover { color: var(--ink); }
+  .foot-mark { display: inline-flex; align-items: center; gap: 4px; }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .hero-copy { animation: none; }
+  }
+
+  @media (max-width: 960px) {
+    .hero-grid, .split, .cta-grid { grid-template-columns: 1fr; gap: 48px; }
+    .feat-rest { grid-template-columns: 1fr 1fr; }
+    .sticky { position: static; }
+    .scene { max-width: 420px; height: 560px; width: 100%; }
+  }
+  @media (max-width: 720px) {
+    .wrap { padding: 0 24px; }
+    .nav-cta { display: none; }
+    .hero { padding: 48px 0 64px; }
+    .hero h1 { font-size: 42px; line-height: 1.06; letter-spacing: -0.02em; }
+    .lead { font-size: 17px; }
+    .sec, .how, .cta { padding: 80px 0; }
+    .sec-head h2 { font-size: 34px; }
+    .cta h2 { font-size: 38px; }
+    .limits li { grid-template-columns: 1fr; gap: 8px; }
+    .steps { grid-template-columns: 1fr; gap: 32px; margin-top: 48px; }
+    .step-n { font-size: 40px; margin-bottom: 16px; }
+    .feat-lead { grid-template-columns: 1fr; gap: 16px; }
+    .feat-card { padding: 24px; }
+    .feat-card h3 { font-size: 26px; }
+    .feat-rest { grid-template-columns: 1fr; gap: 24px; }
+    .scene { height: 600px; }
+    .phone { width: 256px; right: auto; left: 50%; transform: translateX(-50%); }
+    .lnk { font-size: 12px; }
+    .tag { width: 232px; height: 152px; bottom: 0; left: 0; }
   }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<div style="display: flex; align-items: center; justify-content: space-between; padding: 22px 48px; border-bottom: 1px solid var(--line);">
-  <div style="display: flex; align-items: center; gap: 10px;">
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M7 16.5C7 12.9101 9.91015 10 13.5 10" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
-      <path d="M4 19.5C4 13.1487 9.14873 8 15.5 8" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
-      <circle cx="7" cy="19.5" r="2.25" fill="var(--accent)"/>
-    </svg>
-    <span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.01em;">NFC Link Tree</span>
-    <span style="font-size: 13px; color: var(--ink-2); padding-left: 10px; border-left: 1px solid var(--line); margin-left: 2px;">por Quantum</span>
+<header class="nav">
+  <div class="wrap nav-in">
+    <a href="#" class="brand" aria-label="NFC Link Tree por Quantum">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M7 16.5C7 12.9101 9.91015 10 13.5 10" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+        <path d="M4 19.5C4 13.1487 9.14873 8 15.5 8" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+        <circle cx="7" cy="19.5" r="2.25" fill="var(--accent)"/>
+      </svg>
+      <span class="brand-name">NFC Link Tree</span>
+      <span class="brand-by">por Quantum</span>
+    </a>
+    <a href="#contato" class="btn btn-sm btn-ink nav-cta">Falar com a Quantum</a>
   </div>
-  <a href="#contato" class="btn nav-cta" style="background: var(--ink); color: var(--bg); font-size: 14px; font-weight: 600; padding: 10px 20px; border-radius: 999px;">Falar com a Quantum</a>
-</div>
+</header>
+
+<main>
 
 <!-- HERO -->
-<div style="padding: 96px 48px 88px;">
+<section class="hero">
   <div class="wrap hero-grid">
-    <div>
-      <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--bg-alt); border: 1px solid var(--line); color: var(--ink-2); font-size: 12.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 7px 14px; border-radius: 999px; margin-bottom: 28px;">
-        Cartão de visita digital com NFC
-      </div>
-      <h1 style="font-size: 50px; line-height: 1.08; letter-spacing: -0.02em; font-weight: 700; margin: 0 0 24px;">
-        Seu negócio, a um toque de distância do cliente
-      </h1>
-      <p style="font-size: 18px; line-height: 1.6; color: var(--ink-2); max-width: 46ch; margin: 0 0 36px;">
-        Uma tag NFC ou um QR Code abrem, na hora, uma página só sua: links, WhatsApp, redes sociais e o botão para salvar seu contato direto na agenda. Sem aplicativo, sem digitar nada, sem cartão que se perde na carteira.
-      </p>
-      <div style="display: flex; flex-wrap: wrap; gap: 14px;">
-        <a href="#contato" class="btn" style="background: var(--accent); color: #FFFFFF; font-size: 15.5px; font-weight: 600; padding: 14px 26px; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.08);">Quero isso no meu negócio</a>
-        <a href="#como-funciona" class="btn link" style="font-size: 15.5px; font-weight: 600; padding: 14px 10px; color: var(--ink);">Ver como funciona ↓</a>
+    <div class="hero-copy">
+      <p class="kicker">Cartão de visita digital com NFC</p>
+      <h1>Seu negócio, a um toque de distância do cliente</h1>
+      <p class="lead">Uma tag NFC ou um QR Code abrem, na hora, uma página só sua: links, WhatsApp, redes sociais e o botão para salvar seu contato direto na agenda. Sem aplicativo, sem digitar nada, sem cartão que se perde na carteira.</p>
+      <div class="actions">
+        <a href="#contato" class="btn btn-primary">Quero isso no meu negócio</a>
+        <a href="#como-funciona" class="btn-text">Ver como funciona</a>
       </div>
     </div>
 
-    <!-- PHONE MOCKUP -->
-    <div style="display: flex; justify-content: center;">
-      <div style="width: 280px; border-radius: 36px; background: #141311; padding: 14px; box-shadow: 0 30px 60px -20px rgba(20,19,17,0.35);">
-        <div style="border-radius: 24px; background: var(--bg-alt); overflow: hidden;">
-          <div style="height: 150px; background: var(--accent); position: relative;">
-            <div style="position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border-radius: 9px; background: rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1" stroke="#fff" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="#fff" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="#fff" stroke-width="2"/><rect x="14" y="14" width="3" height="3" fill="#fff"/><rect x="18" y="14" width="3" height="3" fill="#fff"/><rect x="14" y="18" width="3" height="3" fill="#fff"/><rect x="18" y="18" width="3" height="3" fill="#fff"/></svg>
-            </div>
-            <div style="position: absolute; left: 50%; bottom: -34px; transform: translateX(-50%); width: 68px; height: 68px; border-radius: 18px; background: var(--bg-alt); border: 3px solid var(--bg-alt); display: flex; align-items: center; justify-content: center;">
-              <div style="width: 100%; height: 100%; border-radius: 15px; background: var(--line);"></div>
-            </div>
+    <div class="scene" aria-hidden="true">
+      <!-- Tag NFC no balcão -->
+      <div class="tag">
+        <div class="tag-mark">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+            <path d="M7 16.5C7 12.9101 9.91015 10 13.5 10" stroke="var(--accent)" stroke-width="1.75" stroke-linecap="round"/>
+            <path d="M4 19.5C4 13.1487 9.14873 8 15.5 8" stroke="var(--accent)" stroke-width="1.75" stroke-linecap="round" opacity="0.55"/>
+            <path d="M1.5 22.5C1.5 12.5 9 4.5 18 4.5" stroke="var(--accent)" stroke-width="1.75" stroke-linecap="round" opacity="0.3"/>
+            <circle cx="7" cy="19.5" r="2" fill="var(--accent)"/>
+          </svg>
+          <div>
+            <div class="tag-label">Encoste o celular aqui</div>
+            <div class="tag-meta">ou leia o QR Code</div>
           </div>
-          <div style="padding: 46px 20px 24px; text-align: center;">
-            <div style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px;">Sua Empresa</div>
-            <div style="font-size: 12px; color: var(--ink-2); margin-top: 4px; line-height: 1.4;">Tapeçaria · Estofados · Acabamento automotivo</div>
-            <div style="display: flex; flex-direction: column; gap: 9px; margin-top: 20px;">
-              <div style="height: 38px; border-radius: 10px; background: #FFFFFF; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 600;">WhatsApp</div>
-              <div style="height: 38px; border-radius: 10px; background: #FFFFFF; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 600;">Instagram</div>
-              <div style="height: 38px; border-radius: 10px; background: #FFFFFF; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 600;">Google Meu Negócio</div>
-              <div style="height: 38px; border-radius: 10px; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 700; color: #FFFFFF; margin-top: 4px;">Salvar contato</div>
+        </div>
+        <svg class="tag-qr" viewBox="0 0 21 21" shape-rendering="crispEdges">
+          <g fill="var(--ink)">
+            <path d="M0 0h7v7H0zM1 1v5h5V1zM2 2h3v3H2z" fill-rule="evenodd"/>
+            <path d="M14 0h7v7h-7zM15 1v5h5V1zM16 2h3v3h-3z" fill-rule="evenodd"/>
+            <path d="M0 14h7v7H0zM1 15v5h5v-5zM2 16h3v3H2z" fill-rule="evenodd"/>
+            <path d="M8 0h1v2H8zM10 1h2v1h-2zM9 3h2v2H9zM12 4h1v3h-1zM8 6h2v1H8zM10 8h3v1h-3zM8 9h1v2H8zM0 8h2v1H0zM3 9h3v1H3zM1 11h2v2H1zM4 12h2v1H4zM14 8h2v2h-2zM17 9h3v1h-3zM19 11h2v1h-2zM15 11h2v2h-2zM10 10h2v2h-2zM12 12h3v1h-3zM8 13h2v2H8zM9 16h2v1H9zM8 18h1v3H8zM10 19h3v1h-3zM12 15h2v2h-2zM14 14h1v1h-1zM16 14h3v2h-3zM15 17h2v1h-2zM18 17h1v3h-1zM14 19h3v2h-3zM20 15h1v3h-1zM11 13h1v1h-1z"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Celular com a página aberta -->
+      <div class="phone">
+        <div class="screen">
+          <div class="cover">
+            <div class="cover-qr">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM14 20h1M20 14h1"/></svg>
             </div>
-            <div style="margin-top: 18px; font-size: 10px; color: var(--ink-3); display: flex; align-items: center; justify-content: center; gap: 5px;">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 16.5C7 12.9 9.9 10 13.5 10" stroke="var(--ink-3)" stroke-width="2" stroke-linecap="round"/><path d="M4 19.5C4 13.1 9.1 8 15.5 8" stroke="var(--ink-3)" stroke-width="2" stroke-linecap="round" opacity="0.6"/></svg>
+            <div class="avatar">SE</div>
+          </div>
+          <div class="profile">
+            <div class="profile-name">Sua Empresa</div>
+            <div class="profile-desc">Uma linha sobre o seu negócio</div>
+            <div class="links">
+              <div class="lnk">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink-2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+                <span>WhatsApp</span><span></span>
+              </div>
+              <div class="lnk">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink-2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg>
+                <span>Instagram</span><span></span>
+              </div>
+              <div class="lnk">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink-2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span>Google Meu Negócio</span><span></span>
+              </div>
+              <div class="lnk lnk-save">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+                <span>Salvar contato</span><span></span>
+              </div>
+            </div>
+            <div class="made-by">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M7 16.5C7 12.9 9.9 10 13.5 10" stroke="var(--ink-3)" stroke-width="2" stroke-linecap="round"/><path d="M4 19.5C4 13.1 9.1 8 15.5 8" stroke="var(--ink-3)" stroke-width="2" stroke-linecap="round" opacity="0.6"/></svg>
               NFC Link Tree · Quantum
             </div>
           </div>
@@ -192,193 +410,211 @@
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- PROBLEMA -->
-<div style="padding: 88px 48px; background: var(--bg-alt); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
-  <div class="wrap">
-    <div style="max-width: 640px; margin: 0 auto 48px; text-align: center;">
-      <h2 style="font-size: 34px; line-height: 1.2; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 14px;">O jeito antigo de divulgar o contato do seu negócio tem limite</h2>
-      <p style="font-size: 16px; color: var(--ink-2); line-height: 1.6; margin: 0;">Cartão de papel, "me chama no WhatsApp" de cor e QR Code genérico resolvem só até certo ponto.</p>
+<section class="sec" style="padding-top: 96px;">
+  <div class="wrap split">
+    <div class="sec-head">
+      <h2>O jeito antigo de divulgar o contato do seu negócio tem limite</h2>
+      <p>Cartão de papel, "me chama no WhatsApp" de cor e QR Code genérico resolvem só até certo ponto.</p>
     </div>
-    <div class="grid3">
-      <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: 28px;">
-        <div style="width: 40px; height: 40px; border-radius: 10px; background: var(--bg-alt); display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4h16v16H4z" stroke="var(--ink-2)" stroke-width="1.6"/><path d="M8 9h8M8 13h5" stroke="var(--ink-2)" stroke-width="1.6" stroke-linecap="round"/></svg>
-        </div>
-        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 8px;">Cartão impresso</h3>
-        <p style="font-size: 14px; color: var(--ink-2); line-height: 1.55; margin: 0;">Se perde na carteira, acaba a tiragem e, quando um número ou link muda, todos os cartões antigos ficam errados.</p>
-      </div>
-      <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: 28px;">
-        <div style="width: 40px; height: 40px; border-radius: 10px; background: var(--bg-alt); display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h8" stroke="var(--ink-2)" stroke-width="1.6" stroke-linecap="round"/></svg>
-        </div>
-        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 8px;">"Me segue lá", de cor</h3>
-        <p style="font-size: 14px; color: var(--ink-2); line-height: 1.55; margin: 0;">Passar usuário do Instagram ou número de telefone falado é fácil de errar na digitação e fácil de esquecer depois.</p>
-      </div>
-      <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: 28px;">
-        <div style="width: 40px; height: 40px; border-radius: 10px; background: var(--bg-alt); display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="4" width="6" height="6" stroke="var(--ink-2)" stroke-width="1.6"/><rect x="14" y="4" width="6" height="6" stroke="var(--ink-2)" stroke-width="1.6"/><rect x="4" y="14" width="6" height="6" stroke="var(--ink-2)" stroke-width="1.6"/></svg>
-        </div>
-        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 8px;">QR Code solto, sem identidade</h3>
-        <p style="font-size: 14px; color: var(--ink-2); line-height: 1.55; margin: 0;">Aponta pra um link qualquer, sem a cor nem o nome da empresa — o cliente não sabe o que vai abrir até clicar.</p>
-      </div>
-    </div>
+    <ul class="limits">
+      <li>
+        <h3>Cartão impresso</h3>
+        <p>Se perde na carteira, acaba a tiragem e, quando um número ou link muda, todos os cartões antigos ficam errados.</p>
+      </li>
+      <li>
+        <h3>"Me segue lá", de cor</h3>
+        <p>Passar usuário do Instagram ou número de telefone falado é fácil de errar na digitação e fácil de esquecer depois.</p>
+      </li>
+      <li>
+        <h3>QR Code solto, sem identidade</h3>
+        <p>Aponta pra um link qualquer, sem a cor nem o nome da empresa. O cliente não sabe o que vai abrir até clicar.</p>
+      </li>
+    </ul>
   </div>
-</div>
+</section>
 
 <!-- COMO FUNCIONA -->
-<div id="como-funciona" style="padding: 96px 48px;">
+<section id="como-funciona" class="how">
   <div class="wrap">
-    <div style="max-width: 640px; margin: 0 auto 56px; text-align: center;">
-      <h2 style="font-size: 34px; line-height: 1.2; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 14px;">Como funciona, na prática</h2>
-      <p style="font-size: 16px; color: var(--ink-2); line-height: 1.6; margin: 0;">Uma tag NFC — um adesivo ou cartão discreto — fica no balcão, na vitrine ou no próprio cartão de visita.</p>
+    <div class="sec-head">
+      <h2>Como funciona, na prática</h2>
+      <p>Uma tag NFC, um adesivo ou cartão discreto, fica no balcão, na vitrine ou no próprio cartão de visita.</p>
     </div>
-    <div class="grid3">
-      <div>
-        <div style="width: 52px; height: 52px; border-radius: 14px; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; margin-bottom: 20px;">1</div>
-        <h3 style="font-size: 17px; font-weight: 700; margin: 0 0 8px;">Encosta o celular na tag</h3>
-        <p style="font-size: 14.5px; color: var(--ink-2); line-height: 1.6; margin: 0;">Ou aponta a câmera para o QR Code impresso ao lado — os dois caminhos levam ao mesmo lugar. Nenhum aplicativo precisa ser instalado.</p>
-      </div>
-      <div>
-        <div style="width: 52px; height: 52px; border-radius: 14px; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; margin-bottom: 20px;">2</div>
-        <h3 style="font-size: 17px; font-weight: 700; margin: 0 0 8px;">A página da empresa abre na hora</h3>
-        <p style="font-size: 14.5px; color: var(--ink-2); line-height: 1.6; margin: 0;">Com as cores, o nome e a foto do negócio — não um modelo genérico. O visitante já sabe de cara onde está.</p>
-      </div>
-      <div>
-        <div style="width: 52px; height: 52px; border-radius: 14px; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; margin-bottom: 20px;">3</div>
-        <h3 style="font-size: 17px; font-weight: 700; margin: 0 0 8px;">O cliente salva o contato e segue em frente</h3>
-        <p style="font-size: 14.5px; color: var(--ink-2); line-height: 1.6; margin: 0;">Um toque salva o número na agenda do celular (como num cartão de visita real) e os links abrem o WhatsApp, o Instagram ou o site direto.</p>
-      </div>
-    </div>
+    <ol class="steps">
+      <li>
+        <span class="step-n">1</span>
+        <h3>Encosta o celular na tag</h3>
+        <p>Ou aponta a câmera para o QR Code impresso ao lado. Os dois caminhos levam ao mesmo lugar, e nenhum aplicativo precisa ser instalado.</p>
+      </li>
+      <li>
+        <span class="step-n">2</span>
+        <h3>A página da empresa abre na hora</h3>
+        <p>Com as cores, o nome e a foto do negócio, não um modelo genérico. O visitante já sabe de cara onde está.</p>
+      </li>
+      <li>
+        <span class="step-n">3</span>
+        <h3>O cliente salva o contato e segue em frente</h3>
+        <p>Um toque salva o número na agenda do celular, como num cartão de visita real, e os links abrem o WhatsApp, o Instagram ou o site direto.</p>
+      </li>
+    </ol>
   </div>
-</div>
+</section>
 
-<!-- FUNCIONALIDADES -->
-<div style="padding: 96px 48px; background: var(--bg-alt); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+<!-- O QUE VEM INCLUSO -->
+<section class="sec">
   <div class="wrap">
-    <div style="max-width: 640px; margin: 0 auto 48px; text-align: center;">
-      <h2 style="font-size: 34px; line-height: 1.2; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 14px;">O que vem incluso</h2>
-      <p style="font-size: 16px; color: var(--ink-2); line-height: 1.6; margin: 0;">Tudo pronto para o seu negócio, com manutenção da Quantum.</p>
+    <div class="sec-head">
+      <h2>O que vem incluso</h2>
+      <p>Tudo pronto para o seu negócio, com manutenção da Quantum.</p>
     </div>
-    <div class="grid6">
-      <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: 26px;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-bottom: 14px;"><circle cx="12" cy="8" r="3.5" stroke="var(--accent)" stroke-width="1.7"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="var(--accent)" stroke-width="1.7" stroke-linecap="round"/></svg>
-        <h3 style="font-size: 15.5px; font-weight: 700; margin: 0 0 7px;">Página com a cara do seu negócio</h3>
-        <p style="font-size: 13.5px; color: var(--ink-2); line-height: 1.55; margin: 0;">Cores, foto e descrição próprias — nunca um template genérico igual ao dos concorrentes.</p>
+    <div class="feat-lead">
+      <div class="feat-card">
+        <h3>Página com a cara do seu negócio</h3>
+        <p>Cores, foto e descrição próprias, nunca um template genérico igual ao dos concorrentes.</p>
       </div>
-      <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: 26px;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-bottom: 14px;"><path d="M4 7l8 5 8-5" stroke="var(--accent)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="5" width="16" height="14" rx="2" stroke="var(--accent)" stroke-width="1.7"/></svg>
-        <h3 style="font-size: 15.5px; font-weight: 700; margin: 0 0 7px;">Salvar contato com 1 toque</h3>
-        <p style="font-size: 13.5px; color: var(--ink-2); line-height: 1.55; margin: 0;">O visitante salva seu número e nome direto na agenda do celular, sem digitar nada.</p>
-      </div>
-      <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: 26px;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-bottom: 14px;"><rect x="3" y="3" width="7" height="7" rx="1" stroke="var(--accent)" stroke-width="1.7"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="var(--accent)" stroke-width="1.7"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="var(--accent)" stroke-width="1.7"/></svg>
-        <h3 style="font-size: 15.5px; font-weight: 700; margin: 0 0 7px;">QR Code embutido</h3>
-        <p style="font-size: 13.5px; color: var(--ink-2); line-height: 1.55; margin: 0;">Para quem tem um celular mais antigo ou prefere ler o código — leva ao mesmo lugar que a tag NFC.</p>
-      </div>
-      <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: 26px;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-bottom: 14px;"><path d="M4 20V10M12 20V4M20 20v-7" stroke="var(--accent)" stroke-width="1.7" stroke-linecap="round"/></svg>
-        <h3 style="font-size: 15.5px; font-weight: 700; margin: 0 0 7px;">Painel para editar sozinho</h3>
-        <p style="font-size: 13.5px; color: var(--ink-2); line-height: 1.55; margin: 0;">Trocar link, horário ou foto não depende de ninguém — é só entrar no painel e atualizar, a qualquer hora.</p>
-      </div>
-      <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: 26px;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-bottom: 14px;"><circle cx="12" cy="12" r="8" stroke="var(--accent)" stroke-width="1.7"/><path d="M12 8v4l3 2" stroke="var(--accent)" stroke-width="1.7" stroke-linecap="round"/></svg>
-        <h3 style="font-size: 15.5px; font-weight: 700; margin: 0 0 7px;">Abre na hora, sem instalar nada</h3>
-        <p style="font-size: 13.5px; color: var(--ink-2); line-height: 1.55; margin: 0;">Funciona direto no navegador do celular do cliente — nenhum aplicativo para baixar antes.</p>
-      </div>
-      <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 16px; padding: 26px;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="margin-bottom: 14px;"><path d="M4 19h16M7 19V9M12 19V5M17 19v-7" stroke="var(--accent)" stroke-width="1.7" stroke-linecap="round"/></svg>
-        <h3 style="font-size: 15.5px; font-weight: 700; margin: 0 0 7px;">Visão de quem acessou</h3>
-        <p style="font-size: 13.5px; color: var(--ink-2); line-height: 1.55; margin: 0;">Acompanhe se as visitas vieram da tag NFC, do QR Code ou de um link direto compartilhado.</p>
+      <div class="feat-card">
+        <h3>Salvar contato com 1 toque</h3>
+        <p>O visitante salva seu número e nome direto na agenda do celular, sem digitar nada.</p>
       </div>
     </div>
+    <ul class="feat-rest">
+      <li>
+        <h3>QR Code embutido</h3>
+        <p>Para quem tem um celular mais antigo ou prefere ler o código. Leva ao mesmo lugar que a tag NFC.</p>
+      </li>
+      <li>
+        <h3>Painel para editar sozinho</h3>
+        <p>Trocar link, horário ou foto não depende de ninguém. É só entrar no painel e atualizar, a qualquer hora.</p>
+      </li>
+      <li>
+        <h3>Abre na hora, sem instalar nada</h3>
+        <p>Funciona direto no navegador do celular do cliente, sem aplicativo para baixar antes.</p>
+      </li>
+      <li>
+        <h3>Visão de quem acessou</h3>
+        <p>Acompanhe se as visitas vieram da tag NFC, do QR Code ou de um link direto compartilhado.</p>
+      </li>
+    </ul>
   </div>
-</div>
+</section>
 
 <!-- POR QUE NFC -->
-<div style="padding: 96px 48px;">
+<section class="sec" style="padding-top: 0;">
   <div class="wrap">
-    <div style="max-width: 680px; margin: 0 auto 48px; text-align: center;">
-      <h2 style="font-size: 34px; line-height: 1.2; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 14px;">Por que uma tag NFC em vez de só um QR Code?</h2>
-      <p style="font-size: 16px; color: var(--ink-2); line-height: 1.6; margin: 0;">As duas formas funcionam juntas no mesmo sistema — a diferença é a experiência de quem está na sua frente.</p>
+    <div class="sec-head">
+      <h2>Por que uma tag NFC em vez de só um QR Code?</h2>
+      <p>As duas formas funcionam juntas no mesmo sistema. A diferença é a experiência de quem está na sua frente.</p>
     </div>
-    <div class="grid3" style="gap: 0; border: 1px solid var(--line); border-radius: 18px; overflow: hidden;">
-      <div style="padding: 32px 26px; border-right: 1px solid var(--line);">
-        <h3 style="font-size: 14px; font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 20px;">Cartão impresso</h3>
-        <div style="display: flex; flex-direction: column; gap: 14px;">
-          <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: #C0392B; font-weight: 700; font-size: 15px; line-height: 1.4;">×</span><span style="font-size: 13.5px; color: var(--ink-2); line-height: 1.5;">Conteúdo fixo — mudar algo exige reimprimir tudo</span></div>
-          <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: #C0392B; font-weight: 700; font-size: 15px; line-height: 1.4;">×</span><span style="font-size: 13.5px; color: var(--ink-2); line-height: 1.5;">Fica na carteira, some com facilidade</span></div>
-          <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: #C0392B; font-weight: 700; font-size: 15px; line-height: 1.4;">×</span><span style="font-size: 13.5px; color: var(--ink-2); line-height: 1.5;">Sem como saber quantas pessoas de fato guardaram o contato</span></div>
-        </div>
-      </div>
-      <div style="padding: 32px 26px; border-right: 1px solid var(--line);">
-        <h3 style="font-size: 14px; font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 20px;">QR Code solto</h3>
-        <div style="display: flex; flex-direction: column; gap: 14px;">
-          <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: #C0392B; font-weight: 700; font-size: 15px; line-height: 1.4;">×</span><span style="font-size: 13.5px; color: var(--ink-2); line-height: 1.5;">Precisa abrir a câmera e mirar certo para ler</span></div>
-          <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: #C0392B; font-weight: 700; font-size: 15px; line-height: 1.4;">×</span><span style="font-size: 13.5px; color: var(--ink-2); line-height: 1.5;">Visual genérico, sem a identidade da empresa</span></div>
-          <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: #1F8A5C; font-weight: 700; font-size: 15px; line-height: 1.4;">✓</span><span style="font-size: 13.5px; color: var(--ink-2); line-height: 1.5;">Funciona em qualquer celular com câmera</span></div>
-        </div>
-      </div>
-      <div style="padding: 32px 26px; background: var(--bg-alt);">
-        <h3 style="font-size: 14px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 20px;">Tag NFC + QR · Quantum</h3>
-        <div style="display: flex; flex-direction: column; gap: 14px;">
-          <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: var(--accent); font-weight: 700; font-size: 15px; line-height: 1.4;">✓</span><span style="font-size: 13.5px; line-height: 1.5;">Basta encostar o celular — sem mirar, sem abrir câmera</span></div>
-          <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: var(--accent); font-weight: 700; font-size: 15px; line-height: 1.4;">✓</span><span style="font-size: 13.5px; line-height: 1.5;">QR Code junto, como alternativa sempre disponível</span></div>
-          <div style="display: flex; gap: 10px; align-items: flex-start;"><span style="color: var(--accent); font-weight: 700; font-size: 15px; line-height: 1.4;">✓</span><span style="font-size: 13.5px; line-height: 1.5;">Página com a cor da empresa e tudo editável pelo painel, a qualquer momento</span></div>
-        </div>
-      </div>
+    <div class="compare-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th scope="col"><span class="na">Na prática</span></th>
+            <th scope="col">Cartão impresso</th>
+            <th scope="col">QR Code solto</th>
+            <th scope="col" class="us">Tag NFC + QR · Quantum</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Para abrir</th>
+            <td>Fica na carteira e some com facilidade</td>
+            <td>Precisa abrir a câmera e mirar certo para ler</td>
+            <td class="us">Basta encostar o celular, sem mirar e sem abrir a câmera</td>
+          </tr>
+          <tr>
+            <th scope="row">Quando algo muda</th>
+            <td>Conteúdo fixo, mudar algo exige reimprimir tudo</td>
+            <td><span class="na">—</span></td>
+            <td class="us">Tudo editável pelo painel, a qualquer momento</td>
+          </tr>
+          <tr>
+            <th scope="row">Visual</th>
+            <td><span class="na">—</span></td>
+            <td>Genérico, sem a identidade da empresa</td>
+            <td class="us">Página com a cor da empresa</td>
+          </tr>
+          <tr>
+            <th scope="row">Celular do cliente</th>
+            <td><span class="na">—</span></td>
+            <td>Funciona em qualquer celular com câmera</td>
+            <td class="us">QR Code junto, como alternativa sempre disponível</td>
+          </tr>
+          <tr>
+            <th scope="row">Quem acessou</th>
+            <td>Sem como saber quantas pessoas de fato guardaram o contato</td>
+            <td><span class="na">—</span></td>
+            <td class="us">Mostra se a visita veio da tag NFC, do QR Code ou de um link direto</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-</div>
+</section>
 
 <!-- CTA / CONTATO -->
-<div id="contato" style="padding: 100px 48px; background: var(--bg-alt); text-align: center;">
-  <div style="max-width: 620px; margin: 0 auto;">
-    <h2 style="font-size: 34px; line-height: 1.2; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 16px;">Quer isso para o seu negócio?</h2>
-    <p style="font-size: 16px; color: var(--ink-2); line-height: 1.6; margin: 0 0 32px;">A Quantum cuida de tudo: configuração da página, tag NFC, QR Code e manutenção. Você só precisa manter os links atualizados pelo painel.</p>
-    <a href="https://wa.me/5593991359644" class="btn" style="background: var(--accent); color: #fff; font-size: 16px; font-weight: 700; padding: 16px 34px; border-radius: 12px;">Falar com a Quantum</a>
-    <p style="font-size: 13px; color: var(--ink-3); margin-top: 18px;">abinerclcosta@gmail.com · +55 (93) 99135-9644</p>
-  </div>
-</div>
-
-<!-- FAQ -->
-<div style="padding: 88px 48px; background: var(--bg-alt); border-top: 1px solid var(--line);">
-  <div class="wrap" style="max-width: 760px;">
-    <h2 style="font-size: 30px; line-height: 1.2; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 36px; text-align: center;">Perguntas frequentes</h2>
-    <div style="display: flex; flex-direction: column; gap: 22px;">
-      <div>
-        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px;">O que é uma tag NFC e como ela funciona nesse sistema?</h3>
-        <p style="font-size: 14.5px; color: var(--ink-2); line-height: 1.6; margin: 0;">NFC é a mesma tecnologia usada em pagamentos por aproximação. Uma pequena tag (um adesivo ou cartão) fica no balcão, na vitrine ou no cartão de visita. Ao encostar o celular nela, a página de links da empresa abre direto no navegador, sem precisar instalar nenhum aplicativo.</p>
-      </div>
-      <div>
-        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px;">Preciso instalar algum aplicativo para usar?</h3>
-        <p style="font-size: 14.5px; color: var(--ink-2); line-height: 1.6; margin: 0;">Não. Nem quem visita a página nem o dono do negócio precisam instalar aplicativo. A página abre no navegador do celular, e o painel de edição dos links também é acessado pelo navegador.</p>
-      </div>
-      <div>
-        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px;">E se o celular do cliente não tiver NFC?</h3>
-        <p style="font-size: 14.5px; color: var(--ink-2); line-height: 1.6; margin: 0;">A mesma página também pode ser acessada lendo um QR Code, que fica disponível junto com a tag NFC. Os dois caminhos levam ao mesmo lugar.</p>
-      </div>
-      <div>
-        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px;">Dá para personalizar as cores e os dados da minha empresa?</h3>
-        <p style="font-size: 14.5px; color: var(--ink-2); line-height: 1.6; margin: 0;">Sim. Cada empresa tem sua própria página, com as cores, a foto e a descrição do negócio, e não um modelo genérico igual para todo mundo.</p>
-      </div>
-      <div>
-        <h3 style="font-size: 16px; font-weight: 700; margin: 0 0 6px;">Consigo editar os links depois que o sistema estiver no ar?</h3>
-        <p style="font-size: 14.5px; color: var(--ink-2); line-height: 1.6; margin: 0;">Sim, o próprio cliente tem acesso a um painel para trocar links, horário de funcionamento ou foto a qualquer momento, sem depender de um programador.</p>
+<section id="contato" class="cta">
+  <div class="wrap cta-grid">
+    <div>
+      <h2>Quer isso para o seu negócio?</h2>
+      <p>A Quantum cuida de tudo: configuração da página, tag NFC, QR Code e manutenção. Você só precisa manter os links atualizados pelo painel.</p>
+    </div>
+    <div class="cta-side">
+      <a href="https://wa.me/5593991359644" class="btn btn-light">Falar com a Quantum</a>
+      <div class="contact">
+        <a href="mailto:abinerclcosta@gmail.com">abinerclcosta@gmail.com</a>
+        <a href="tel:+5593991359644">+55 (93) 99135-9644</a>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- FOOTER -->
-<div style="padding: 28px 48px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-  <span style="font-size: 13px; color: var(--ink-3);">Quantum — Soluções e Estratégias</span>
-  <span style="font-size: 13px; color: var(--ink-3); display: inline-flex; align-items: center; gap: 6px;">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 16.5C7 12.9 9.9 10 13.5 10" stroke="var(--ink-3)" stroke-width="2" stroke-linecap="round"/><path d="M4 19.5C4 13.1 9.1 8 15.5 8" stroke="var(--ink-3)" stroke-width="2" stroke-linecap="round" opacity="0.6"/></svg>
-    NFC Link Tree
-  </span>
-</div>
+<!-- FAQ -->
+<section class="sec">
+  <div class="wrap split">
+    <div class="sec-head sticky">
+      <h2>Perguntas frequentes</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <h3>O que é uma tag NFC e como ela funciona nesse sistema?</h3>
+        <p>NFC é a mesma tecnologia usada em pagamentos por aproximação. Uma pequena tag (um adesivo ou cartão) fica no balcão, na vitrine ou no cartão de visita. Ao encostar o celular nela, a página de links da empresa abre direto no navegador, sem precisar instalar nenhum aplicativo.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Preciso instalar algum aplicativo para usar?</h3>
+        <p>Não. Nem quem visita a página nem o dono do negócio precisam instalar aplicativo. A página abre no navegador do celular, e o painel de edição dos links também é acessado pelo navegador.</p>
+      </div>
+      <div class="faq-item">
+        <h3>E se o celular do cliente não tiver NFC?</h3>
+        <p>A mesma página também pode ser acessada lendo um QR Code, que fica disponível junto com a tag NFC. Os dois caminhos levam ao mesmo lugar.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Dá para personalizar as cores e os dados da minha empresa?</h3>
+        <p>Sim. Cada empresa tem sua própria página, com as cores, a foto e a descrição do negócio, e não um modelo genérico igual para todo mundo.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Consigo editar os links depois que o sistema estiver no ar?</h3>
+        <p>Sim, o próprio cliente tem acesso a um painel para trocar links, horário de funcionamento ou foto a qualquer momento, sem depender de um programador.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>Quantum — Soluções e Estratégias</span>
+    <a href="mailto:abinerclcosta@gmail.com">abinerclcosta@gmail.com</a>
+    <span class="foot-mark">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 16.5C7 12.9 9.9 10 13.5 10" stroke="var(--ink-3)" stroke-width="2" stroke-linecap="round"/><path d="M4 19.5C4 13.1 9.1 8 15.5 8" stroke="var(--ink-3)" stroke-width="2" stroke-linecap="round" opacity="0.6"/></svg>
+      NFC Link Tree
+    </span>
+  </div>
+</footer>
 
 </body>
 </html>
